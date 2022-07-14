@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+
+  web1:
+    image: nginx:latest
+    container_name: web1
+    restart: unless-stopped
+    volumes:
+      - ./web1:/usr/share/nginx/html
+    expose:
+      - 80
+
+  web2:
+    image: nginx:latest
+    container_name: web2
+    restart: unless-stopped
+    volumes:
+      - ./web2:/usr/share/nginx/html
+    expose:
+      - 80
+
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    restart: unless-stopped
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    links:
+      - web1
+      - web2
+    ports:
+      - 80:80
+    expose:
+      - 80
